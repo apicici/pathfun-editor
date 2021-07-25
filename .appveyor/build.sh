@@ -40,7 +40,7 @@ do
     cd ..
 done
 
-$DISTRIBUTOR linux "$NAME" "game.love" . extra-linux-x64.tar
-$DISTRIBUTOR windows -a x86 "$NAME" "game.love" . extra-windows-x86.tar
-$DISTRIBUTOR windows -a x64 "$NAME" "game.love" . extra-windows-x64.tar
-$DISTRIBUTOR macos "$NAME" "game.love" . "$IDENTIFIER" "$COPYRIGHT" extra-macos-x64.tar
+$DISTRIBUTOR linux "$NAME" "game.love" .. extra-linux-x64.tar
+$DISTRIBUTOR windows -a x86 "$NAME" "game.love" .. extra-windows-x86.tar
+$DISTRIBUTOR windows -a x64 "$NAME" "game.love" .. extra-windows-x64.tar
+$DISTRIBUTOR macos "$NAME" "game.love" .. "$IDENTIFIER" "$COPYRIGHT" extra-macos-x64.tar
