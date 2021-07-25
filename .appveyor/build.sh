@@ -28,15 +28,15 @@ cd ../build/lua
 zip -9 -r "../game.love" *
 
 cd ..
-for name in "linux-x64" "macos-x64" "windows-x86" "windows-x64"
+for suffix in "linux-x64" "macos-x64" "windows-x86" "windows-x64"
 do
-    mkdir -p "extra-$name"
-    wget "https://github.com/apicici/clipper-lua/releases/download/$CLIPPER_VERSION/clipper-lua-$name-$CLIPPER_VERSION.zip"
-    unzip -j "clipper-lua-$name-$CLIPPER_VERSION.zip" *.so *.dll *.dylib -d "extra-$name"
-    wget "https://github.com/apicici/cimgui-love/releases/download/$CIMGUI_VERSION/cimgui-love-$name-$CIMGUI_VERSION.zip"
-    unzip -j "cimgui-love-$name-$CIMGUI_VERSION.zip" *.so *.dll *.dylib -d "extra-$name"
-    cd "extra-$name"
-    tar -c * -f "../extra-$name.tar"
+    mkdir -p "extra-$suffix"
+    wget "https://github.com/apicici/clipper-lua/releases/download/$CLIPPER_VERSION/clipper-lua-$suffix-$CLIPPER_VERSION.zip"
+    unzip -j "clipper-lua-$suffix-$CLIPPER_VERSION.zip" *.so *.dll *.dylib -d "extra-$suffix"
+    wget "https://github.com/apicici/cimgui-love/releases/download/$CIMGUI_VERSION/cimgui-love-$suffix-$CIMGUI_VERSION.zip"
+    unzip -j "cimgui-love-$suffix-$CIMGUI_VERSION.zip" *.so *.dll *.dylib -d "extra-$suffix"
+    cd "extra-$suffix"
+    tar -c * -f "../extra-$suffix.tar"
     cd ..
 done
 
@@ -44,3 +44,9 @@ $DISTRIBUTOR linux "$NAME" "game.love" .. extra-linux-x64.tar
 $DISTRIBUTOR windows -a x86 "$NAME" "game.love" .. extra-windows-x86.tar
 $DISTRIBUTOR windows -a x64 "$NAME" "game.love" .. extra-windows-x64.tar
 $DISTRIBUTOR macos "$NAME" "game.love" .. "$IDENTIFIER" "$COPYRIGHT" extra-macos-x64.tar
+
+cd ..
+for suffix in "linux-x64" "macos-x64" "windows-x86" "windows-x64"
+do
+    zip -j "$NAME-$suffix.zip" ".appveyor/LICENSE.md" ".appveyor/LOVE_LICENSE.txt"
+done
