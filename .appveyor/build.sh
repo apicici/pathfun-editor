@@ -6,6 +6,7 @@ COPYRIGHT="© 2021 apicici"
 CIMGUI_VERSION="1.83-3"
 CLIPPER_VERSION="v1.0"
 
+pip install hererocks
 hererocks env --lua 5.1 -rlatest
 source env/bin/activate
 luarocks install moonscript
