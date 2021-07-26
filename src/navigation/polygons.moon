@@ -58,7 +58,7 @@ Polygon = M.class {
     __init: (path) =>
         @n = path\size()
         vertices = [path[i - 1] for i = 1, @n]
-        @vertices = CyclicList([Vec2(v.X, v.Y) for v in *vertices])
+        @vertices = CyclicList([Vec2(tonumber(v.X), tonumber(v.Y)) for v in *vertices])
 
     draw: (hover={}, active)=>
         line_color = active and (@parent and colours.hole or colours.contour) or colours.inactive
@@ -105,7 +105,7 @@ Polygons = M.class {
             vertices = {}
             for i = 1, path\size()
                 v = path[i - 1]
-                vertices[i] = {v.X, v.Y}
+                vertices[i] = {tonumber(v.X), tonumber(v.Y)}
             polys[#polys + 1] = vertices
 
         return polys
