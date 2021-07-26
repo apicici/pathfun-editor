@@ -139,6 +139,7 @@ love.draw = ->
 
     -- menu
     im.PushStyleColor_Vec4(im.ImGuiCol_MenuBarBg, colours.redbar) if global.changed
+    style_pushed = global.changed
     im.PushStyleVar_Float(im.ImGuiStyleVar_WindowBorderSize, 0)
     if im.BeginMainMenuBar()
         if im.BeginMenu("File")
@@ -169,7 +170,7 @@ love.draw = ->
             im.EndMenu()
         im.EndMainMenuBar()
     im.PopStyleVar()
-    im.PopStyleColor() if global.changed
+    im.PopStyleColor() if style_pushed
 
     if file_loaded
         -- output table
