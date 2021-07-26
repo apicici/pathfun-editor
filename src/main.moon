@@ -12,7 +12,6 @@ love.load = () ->
     im = require "cimgui"
     im.Init()
 
-    love.graphics.setDefaultFilter("nearest", "nearest")
     require "input"
     require "draw"
     require "update"
