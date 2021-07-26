@@ -73,6 +73,7 @@ M.draw = (...) ->
                 else
                     if im.Button("Rename")
                         im.OpenPopup_Str("Rename")
+                    rename_closed = false
                     if im.BeginPopup("Rename")
                         im.Text("Press enter to change")
                         im.SetKeyboardFocusHere()
@@ -85,7 +86,9 @@ M.draw = (...) ->
                                 pmap.name = newname
                                 pmap\refresh()
                             im.CloseCurrentPopup()
+                            rename_closed = true
                         im.EndPopup()
+                    im.CloseCurrentPopup() if rename_closed
                     if im.Button("Delete")
                         global.changed = true
                         if global.pmap == editor.remove_pmap(i)
