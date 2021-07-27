@@ -18,6 +18,11 @@ This distribution contains code from the following projects (full license text b
 	+ Website: http://www.angusj.com
 	+ License: Boost Software License
 	+ Copyright (c) 2010-2017 Angus Johnson
+
+- polypartition
+	+ Website: https://github.com/ivanfratric/polypartition
+	+ License: MIT License
+	+ Copyright (c) 2011-2021 Ivan Fratric and contributors
 	
 - pathfun
 	+ Website: https://github.com/apicici/pathfun
