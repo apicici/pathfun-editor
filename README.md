@@ -18,11 +18,11 @@ The following animation provides a quick overview of the main features of the ed
 
 ## How to use
 
-The git repository only contains the LÖVE source code (mostly written in [MoonScript](https://moonscript.org/)). To use the editor you can grab a [pre-built release](https://github.com/apicici/clipper-luajit-ffi/releases) (recommended) or compile code and/or libraries yourself.
+The git repository only contains the LÖVE source code (mostly written in [MoonScript](https://moonscript.org/)). To use the editor you can grab a [pre-built release](https://github.com/apicici/pathfun-editor/releases) (recommended) or compile code and/or libraries yourself.
 
 ### Pre-built binaries
 
-Pre-built binaries can be found in the [releases page](https://github.com/apicici/clipper-luajit-ffi/releases) for the following systems/architectures:
+Pre-built binaries can be found in the [releases page](https://github.com/apicici/pathfun-editor/releases) for the following systems/architectures:
 * Linux x64
 * Windows x86, x64
 * macos x64
