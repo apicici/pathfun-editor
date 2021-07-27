@@ -33,7 +33,7 @@ Pre-built binaries can be found in the [releases page](https://github.com/apicic
 
 1. First you'll need to compile the `.moon` files in the `src` directory with MoonScript (see instructions [here](https://leafo.net/posts/getting_started_with_moonscript.html#creating-programs/compiling-and-running)).
 2. Put all the `.lua` files from the `src` directory and the ones compiled with MoonScript in a zip file, preserving the directory structure (`main.lua` should be in the root of the zip file).
-3. Rename the zip file to `pathfun-editor.love`
+3. Rename the zip file to `pathfun-editor.love`.
 
 The `pathfun-editor.love` obtained here cannot be run with LÖVE yet, since it requires compilation of the shared libraries.
 
@@ -50,6 +50,6 @@ You can either grab the pre-compiled libraries from the project releases or comp
 
 1. Place the compiled shared libraries in the same folder as the `pathfun-editor.love` file.
 2. Download the LÖVE binaries from https://love2d.org/
-3. Run `pathfun-editor.love` using LÖVE
+3. Run `pathfun-editor.love` using LÖVE.
 
 
