@@ -32,7 +32,7 @@ for suffix in "linux-x64" "macos-x64" "windows-x86" "windows-x64"
 do
     mkdir -p "extra-$suffix"
     wget "https://github.com/apicici/clipper-luajit-ffi/releases/download/$CLIPPER_VERSION/clipper-luajit-ffi-$suffix-$CLIPPER_VERSION.zip"
-    unzip -j "clipper-lua-$suffix-$CLIPPER_VERSION.zip" *.so *.dll *.dylib -d "extra-$suffix"
+    unzip -j "clipper-luajit-ffi-$suffix-$CLIPPER_VERSION.zip" *.so *.dll *.dylib -d "extra-$suffix"
     wget "https://github.com/apicici/cimgui-love/releases/download/$CIMGUI_VERSION/cimgui-love-$suffix-$CIMGUI_VERSION.zip"
     unzip -j "cimgui-love-$suffix-$CIMGUI_VERSION.zip" *.so *.dll *.dylib -d "extra-$suffix"
     cd "extra-$suffix"
