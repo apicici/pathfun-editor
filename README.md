@@ -9,7 +9,7 @@ Works on Linux, Windows, and macos.
 ## Features
 - Visual editing the navigation area by adding or subtracting polygons in an intuitive way.
 - Testing mode to test pathfinding on the navigation area using pathfun.
-- Help window with instructions on hot to use the editor.
+- Help window with instructions on how to use the editor.
 - Exports a `.lua` file that returns the navigation data expected from pathfun when required from Lua.
 
 The following animation provides a quick overview of the main features of the editor:
