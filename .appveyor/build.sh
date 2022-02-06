@@ -3,7 +3,7 @@ DISTRIBUTOR="python love-distributor.py"
 NAME=${APPVEYOR_PROJECT_SLUG}
 IDENTIFIER=com.apicici.pathfun-editor
 COPYRIGHT="© 2021 apicici"
-CIMGUI_VERSION="1.83-3"
+CIMGUI_VERSION="1.87WIP-1"
 CLIPPER_VERSION="v1.1"
 
 pip install hererocks
