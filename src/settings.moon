@@ -13,6 +13,8 @@ width, height = if window = M.t.window
 else
 	800, 600
 
+M.t.scale = type(M.t.scale) == "number" and math.floor(M.t.scale) or 1
+
 flags = {
 	resizable: true
 }
@@ -41,8 +43,8 @@ M.resize = (w, h) =>
 	@t.window = {:w, :h, fullscreen:{love.window.getFullscreen()}}
 	@save()
 
-M.font_size = (size) =>
-	@t.font_size = size
+M.scale = (scale) =>
+	@t.scale = scale
 	@save()
 	
 return M

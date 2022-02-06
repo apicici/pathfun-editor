@@ -57,6 +57,26 @@ for t in *cols
     idx, col, a = im["ImGuiCol_" .. t[1]], t[2], t[3]
     style.Colors[idx] = a and im.ImVec4_Float(col.x, col.y, col.z, a) or col
 
+-- scale
+saved_style = im.ImGuiStyle()
+ffi.copy(saved_style, style, ffi.sizeof("ImGuiStyle"))
+
+rescale = (s) ->
+    ffi.copy(style, saved_style, ffi.sizeof("ImGuiStyle"))
+    style\ScaleAllSizes(s)
+    settings\scale(s)
+    view\update()
+
+    io = im.GetIO()
+    io.Fonts\Clear()
+    config = im.ImFontConfig()
+    config.SizePixels = 13*s
+    io.FontDefault = io.Fonts\AddFontDefault(config)
+    im.BuildFontAtlas()
+
+scale_p = ffi.new("int[1]", settings.t.scale)
+rescale(scale_p[0])
+
 show = {
     bounds: false
     coordinates: false
@@ -70,10 +90,11 @@ show_p = {
 background_colour = {0,0,0}
 
 love.draw = ->
+    rescale_needed = false
     file_loaded = not not global.filename
     file_changed = not not global.changed
 
-    modal_button_size = im.ImVec2_Float(15*4, 0)
+    modal_button_size = im.ImVec2_Float(15*4, 0)*scale_p[0]
 
     love.graphics.setBackgroundColor(background_colour)
     
@@ -81,7 +102,7 @@ love.draw = ->
     if err = global.error
         w, h = love.graphics.getDimensions()
         im.SetNextWindowPos(im.ImVec2_Float(w/2, h/2), nil, im.ImVec2_Float(0.5, 0.5))
-        im.SetNextWindowSize(im.ImVec2_Float(500, 0))
+        im.SetNextWindowSize(im.ImVec2_Float(500*scale_p[0], 0))
         im.OpenPopup_Str("Warning")
         if im.BeginPopupModal("Warning", nil, im.WindowFlags("AlwaysAutoResize", "NoCollapse"))
             im.TextWrapped(err)
@@ -95,7 +116,7 @@ love.draw = ->
     if global.signals.quit
         w, h = love.graphics.getDimensions()
         im.SetNextWindowPos(im.ImVec2_Float(w/2, h/2), nil, im.ImVec2_Float(0.5, 0.5))
-        im.SetNextWindowSize(im.ImVec2_Float(500, 0))
+        im.SetNextWindowSize(im.ImVec2_Float(500*scale_p[0], 0))
         im.OpenPopup_Str("Warning##quit")
         if im.BeginPopupModal("Warning##quit", nil, im.WindowFlags("AlwaysAutoResize", "NoCollapse"))
             im.TextWrapped("Save changes before closing?")
@@ -118,7 +139,7 @@ love.draw = ->
     if global.signals.load
         w, h = love.graphics.getDimensions()
         im.SetNextWindowPos(im.ImVec2_Float(w/2, h/2), nil, im.ImVec2_Float(0.5, 0.5))
-        im.SetNextWindowSize(im.ImVec2_Float(500, 0))
+        im.SetNextWindowSize(im.ImVec2_Float(500*scale_p[0], 0))
         im.OpenPopup_Str("Warning##load")
         if im.BeginPopupModal("Warning##load", nil, im.WindowFlags("AlwaysAutoResize", "NoCollapse"))
             im.TextWrapped("Save changes before loading new file?")
@@ -167,6 +188,11 @@ love.draw = ->
             im.EndMenu()
         if im.BeginMenu("Options")
             helpers.color_edit("Background colour", background_colour, im.ImGuiColorEditFlags_NoInputs)
+            if im.InputInt("Global scale", scale_p)
+                if scale_p[0] < 1
+                    scale_p[0] = 1
+                else
+                    rescale_needed = true
             im.EndMenu()
         im.EndMainMenuBar()
     im.PopStyleVar()
@@ -195,3 +221,6 @@ love.draw = ->
     
     im.Render()
     im.RenderDrawLists()
+
+    rescale(scale_p[0]) if rescale_needed
+    
