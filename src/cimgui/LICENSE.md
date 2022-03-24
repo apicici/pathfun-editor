@@ -1,6 +1,33 @@
-MIT License
+Licensing information
+=====================
 
-Copyright (c) 2021 apicici
+This distribution contains code from the following projects (full license text below):
+
+- cimgui-love
+	+ Website: https://github.com/apicici/cimgui-love
+	+ License: MIT License
+	+ Copyright (c) 2021 apicici
+- cimgui
+	+ Website: https://github.com/cimgui/cimgui
+	+ License: MIT License
+	+ Copyright (c) 2015 Stephan Dilly
+- Dear ImGui
+	+ Website: https://github.com/ocornut/imgui
+	+ License: MIT License
+	+ Copyright (c) 2014-2021 Omar Cornut
+- love-imgui
+	+ Website: https://github.com/slages/love-imgui
+	+ License: MIT License
+	+ Copyright (c) 2016 slages
+- Proggy Fonts
+	+ Website: https://github.com/bluescan/proggyfonts
+	+ License: MIT License
+	+ Copyright (c) 2004, 2005 Tristan Grimmer
+	
+License text
+============
+
+## MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +46,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
