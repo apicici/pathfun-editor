@@ -32,6 +32,8 @@ toggle_mode = ->
     mode.clear()
     M.mousemoved(love.mouse.getPosition())
 
+local payload_pmap
+
 M.draw = (...) ->
     mode.draw(...)
     if im.Begin("Navigation", nil, im.ImGuiWindowFlags_MenuBar)
@@ -67,6 +69,16 @@ M.draw = (...) ->
                 if not test_mode
                     M.clear()
                 global.pmap = pmap
+            if im.BeginDragDropSource()
+                im.Text(pmap.name or "*unnamed*")
+                im.SetDragDropPayload("pmap", nil, 0)
+                payload_pmap = i
+                im.EndDragDropSource()
+            if im.BeginDragDropTarget()
+                if im.AcceptDragDropPayload("pmap") ~= nil
+                    tmp = table.remove(global.pmaps, payload_pmap)
+                    table.insert(global.pmaps, i, tmp)
+                im.EndDragDropTarget()
             if im.BeginPopupContextItem()
                 if test_mode
                     im.Text("No editing in Testing mode")
