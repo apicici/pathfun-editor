@@ -40,7 +40,7 @@ The `pathfun-editor.love` obtained here cannot be run with LÖVE yet, since it r
 #### Shared libraries
 
 The editor needs shared libraries from the following projects:
-* [cimgui-love](https://github.com/apicici/cimgui-love) (version 1.87)
+* [cimgui-love](https://github.com/apicici/cimgui-love) (version 1.87-1)
 * [clipper-luajit-ffi](https://github.com/apicici/clipper-luajit-ffi) (version 1.1)
 
 You can either grab the pre-compiled libraries from the project releases or compile them yourself.
