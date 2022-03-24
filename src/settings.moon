@@ -17,6 +17,7 @@ M.t.scale = type(M.t.scale) == "number" and math.floor(M.t.scale) or 1
 
 flags = {
 	resizable: true
+	highdpi: true
 }
 
 love.window.setMode(width, height, flags)
