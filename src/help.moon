@@ -44,6 +44,7 @@ return ->
 
         if im.TreeNode_Str("Notes on multiple polygon maps")
             BulletTextWrapped("Two polygons belonging to different polygon maps are considered connected only if they share an edge. You may need to move some vertices if they were not perfectly aligned.")
+            BulletTextWrapped("Pathfun expects all the vertices tp be external vertices. If joining two polygon maps makes a vertex internal the pathfinding algorithm won't work as expected.")
             BulletTextWrapped("You can switch to testing mode to check if the polygon maps are properly connected.")
             im.TreePop()
 

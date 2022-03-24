@@ -7,33 +7,33 @@ navigation = require "navigation"
 
 love.mousepressed = (...) ->
 	x, y, button = ...
-	im.MousePressed(button)
-    if im.GetWantCaptureMouse() then return
+	im.love.MousePressed(button)
+    if im.love.GetWantCaptureMouse() then return
 
 	if not view.moving
 		navigation.mousepressed(...)
 
 love.mousereleased = (...) ->
 	x, y, button = ...
-    im.MouseReleased(button)
-    if im.GetWantCaptureMouse() then return
+    im.love.MouseReleased(button)
+    if im.love.GetWantCaptureMouse() then return
 
 	if not view.moving
 		navigation.mousereleased(...)
 
 love.mousemoved = (...) ->
 	x, y, dx, dy = ...
-	im.MouseMoved(x, y)
-	if im.GetWantCaptureMouse() then return
+	im.love.MouseMoved(x, y)
+	if im.love.GetWantCaptureMouse() then return
 
-	if love.keyboard.isDown('space') and not im.GetWantCaptureKeyboard() and
-		love.mouse.isDown(1) and not im.GetWantCaptureMouse()
+	if love.keyboard.isDown('space') and not im.love.GetWantCaptureKeyboard() and
+		love.mouse.isDown(1) and not im.love.GetWantCaptureMouse()
         view\move(-dx, -dy)
     else navigation.mousemoved(...)
 
 love.wheelmoved = (x, y) ->
-    im.WheelMoved(x, y)
-    if im.GetWantCaptureMouse() then return
+    im.love.WheelMoved(x, y)
+    if im.love.GetWantCaptureMouse() then return
 	
     view\zoom(y, love.mouse.getPosition())
 
@@ -42,8 +42,8 @@ love.keypressed = (...) ->
     if global.error and key == "return"
         global.error = nil
         return
-    im.KeyPressed(key)
-    if im.GetWantCaptureKeyboard() then return
+    im.love.KeyPressed(key)
+    if im.love.GetWantCaptureKeyboard() then return
 
 	if view.moving then return
 	switch key
@@ -64,15 +64,15 @@ love.keypressed = (...) ->
         	navigation.keypressed(...)
 
 love.keyreleased = (key) ->
-    im.KeyReleased(key)
-    if im.GetWantCaptureKeyboard() then return
+    im.love.KeyReleased(key)
+    if im.love.GetWantCaptureKeyboard() then return
 
 	if key == "space"
 		view.moving = false
 	
 love.textinput = (t) ->
-    im.TextInput(t)
-    if im.GetWantCaptureKeyboard() then return
+    im.love.TextInput(t)
+    if im.love.GetWantCaptureKeyboard() then return
 
 love.filedropped = (file) ->
     serialization.filedropped(file)

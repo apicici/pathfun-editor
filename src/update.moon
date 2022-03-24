@@ -7,13 +7,13 @@ default_cursor = love.mouse.getCursor()
 hand_cursor = love.mouse.getSystemCursor('hand')
 
 love.update = (dt) ->   
-    im.Update(dt)
+    im.love.Update(dt)
     im.NewFrame()
 
     navigation\update(dt)
 
     io = im.GetIO()    
-    if not im.GetWantCaptureMouse()
+    if not im.love.GetWantCaptureMouse()
         io.ConfigFlags = bit.bor(io.ConfigFlags, im.ImGuiConfigFlags_NoMouseCursorChange)
         if view.moving
             love.mouse.setCursor(hand_cursor)

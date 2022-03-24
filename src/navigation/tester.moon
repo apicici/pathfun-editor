@@ -2,12 +2,11 @@ path = (...)\gsub("[^%.]*$", "")
 
 view = require "view"
 pf = require "pathfun"
-PFM = require "pathfun.master"
 colours = require path .. "colours"
 global = require "global"
 
 
-import Vec2 from PFM
+Vec2 = require "pathfun.steelpan.vectors"
 
 M = {}
 
@@ -22,7 +21,7 @@ draw_nav = ->
     for p in *nav.polygons
         if p.hidden then continue
         for i = 1, p.n
-            if not p.connections[i] or p.connections[i].polygon.hidden
+            if not p\get_connection(i)
                 A, B = p\get_edge(i)
                 love.graphics.line(A.x, A.y, B.x, B.y)
     love.graphics.setColor(1,1,1)

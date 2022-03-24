@@ -3,20 +3,21 @@ path = (...)\gsub("[^%.]*$", "")
 clipper = require "clipper"
 pp = require path .. "polypartition"
 colours = require path .. "colours"
-M = require "pathfun.master"
 
 cl = clipper.Clipper(clipper.ioPreserveCollinear)
 tree = clipper.PolyTree()
 
-import Vec2, CyclicList from M
-import clamp from M.math
+Vec2 = require "pathfun.steelpan.vectors"
+Class = require "pathfun.steelpan.class"
+CyclicList = require "pathfun.steelpan.cyclic"
+import clamp from require("pathfun.steelpan.utils").math
 import dot from Vec2
 
 EPSILON = 10
 
 local *
 
-PolygonToAdd = M.class {
+PolygonToAdd = Class {
     __init: =>
         @clear()
         @subtract = false
@@ -54,7 +55,7 @@ PolygonToAdd = M.class {
         love.graphics.setColor(1,1,1)
 }
 
-Polygon = M.class {
+Polygon = Class {
     __init: (path) =>
         @n = path\size()
         vertices = [path[i - 1] for i = 1, @n]
@@ -85,7 +86,7 @@ Polygon = M.class {
         return (P - C)\lenS()
 }
 
-Polygons = M.class {
+Polygons = Class {
     __init: (vertices_table={}) =>
         paths = {}
         for vertices in *vertices_table
@@ -255,7 +256,7 @@ Polygons = M.class {
         return polys
 }
 
-ConvexDecomposition = M.class {
+ConvexDecomposition = Class {
     __init: (polygons={}, name) =>
         polylists = {}
         parents = {}

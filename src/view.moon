@@ -1,7 +1,5 @@
-PFM = require 'pathfun.master'
 settings = require "settings"
-
-import round from PFM.math
+import round from require("pathfun.steelpan.utils").math
 
 view = {}
 view.transform = love.math.newTransform()

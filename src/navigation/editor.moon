@@ -2,13 +2,11 @@ path = (...)\gsub("[^%.]*$", "")
 
 global = require "global"
 im = require "cimgui"
-M = require "pathfun.master"
 view = require "view"
 
 import Polygons, PolygonToAdd from require path .. "polygons"
-import Set from M
-import round from M.math
-
+Set = require "pathfun.steelpan.sets"
+import round from require("pathfun.steelpan.utils").math
 
 M = {}
 
@@ -17,7 +15,7 @@ M.poly2add = poly2add
 moving = false
 
 M.update = ->
-    if im.GetWantCaptureMouse()
+    if im.love.GetWantCaptureMouse()
         moving = false
         global.pmap.hover = {} if global.pmap
 

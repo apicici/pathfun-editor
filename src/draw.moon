@@ -1,13 +1,14 @@
 global = require "global"
 helpers = require "imgui_helpers"
 im = require "cimgui"
-PFM = require "pathfun.master"
 navigation = require "navigation"
 serialization = require "serialization"
 settings = require "settings"
 view = require "view"
 ffi = require "ffi"
 help = require "help"
+
+import round from require("pathfun.steelpan.utils").math
 
 -- style
 style = im.GetStyle()
@@ -72,7 +73,7 @@ rescale = (s) ->
     config = im.ImFontConfig()
     config.SizePixels = 13*s
     io.FontDefault = io.Fonts\AddFontDefault(config)
-    im.BuildFontAtlas()
+    im.love.BuildFontAtlas()
 
 scale_p = ffi.new("int[1]", settings.t.scale)
 rescale(scale_p[0])
@@ -104,7 +105,7 @@ love.draw = ->
         im.SetNextWindowPos(im.ImVec2_Float(w/2, h/2), nil, im.ImVec2_Float(0.5, 0.5))
         im.SetNextWindowSize(im.ImVec2_Float(500*scale_p[0], 0))
         im.OpenPopup_Str("Warning")
-        if im.BeginPopupModal("Warning", nil, im.WindowFlags("AlwaysAutoResize", "NoCollapse"))
+        if im.BeginPopupModal("Warning", nil, im.love.WindowFlags("AlwaysAutoResize", "NoCollapse"))
             im.TextWrapped(err)
             im.Spacing()
             im.Spacing()
@@ -118,7 +119,7 @@ love.draw = ->
         im.SetNextWindowPos(im.ImVec2_Float(w/2, h/2), nil, im.ImVec2_Float(0.5, 0.5))
         im.SetNextWindowSize(im.ImVec2_Float(500*scale_p[0], 0))
         im.OpenPopup_Str("Warning##quit")
-        if im.BeginPopupModal("Warning##quit", nil, im.WindowFlags("AlwaysAutoResize", "NoCollapse"))
+        if im.BeginPopupModal("Warning##quit", nil, im.love.WindowFlags("AlwaysAutoResize", "NoCollapse"))
             im.TextWrapped("Save changes before closing?")
             im.Spacing()
             im.Spacing()
@@ -141,7 +142,7 @@ love.draw = ->
         im.SetNextWindowPos(im.ImVec2_Float(w/2, h/2), nil, im.ImVec2_Float(0.5, 0.5))
         im.SetNextWindowSize(im.ImVec2_Float(500*scale_p[0], 0))
         im.OpenPopup_Str("Warning##load")
-        if im.BeginPopupModal("Warning##load", nil, im.WindowFlags("AlwaysAutoResize", "NoCollapse"))
+        if im.BeginPopupModal("Warning##load", nil, im.love.WindowFlags("AlwaysAutoResize", "NoCollapse"))
             im.TextWrapped("Save changes before loading new file?")
             im.Spacing()
             im.Spacing()
@@ -209,7 +210,7 @@ love.draw = ->
         if show.coordinates
             helpers.BeginOverlay("coordinates")
             x,y = view\get_coordinates(love.mouse.getPosition())
-            im.Text("(#{PFM.math.round(x)}, #{PFM.math.round(y)})")
+            im.Text("(#{round(x)}, #{round(y)})")
             helpers.EndOverlay()
 
         if show_p.help[0]
@@ -220,7 +221,7 @@ love.draw = ->
         navigation\draw()
     
     im.Render()
-    im.RenderDrawLists()
+    im.love.RenderDrawLists()
 
     rescale(scale_p[0]) if rescale_needed
     

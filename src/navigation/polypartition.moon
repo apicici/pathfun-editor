@@ -20,14 +20,13 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 --THE SOFTWARE.
 
-M = require "pathfun.master"
-
 TPPL_CCW = 1
 TPPL_CW = -1
 
-import Vec2 from M
+Vec2 = require "pathfun.steelpan.vectors"
+Class = require "pathfun.steelpan.class"
 
-TPPLPoly = M.class {
+TPPLPoly = Class {
     __init: =>
         @clear()
 

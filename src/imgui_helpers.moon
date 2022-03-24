@@ -59,7 +59,7 @@ M.help_marker = (text) ->
 
 M.BeginOverlay = (id) ->
     im.SetNextWindowBgAlpha(0.3)
-    im.Begin("###{id}", nil, im.WindowFlags("NoTitleBar", "NoResize", "AlwaysAutoResize"))
+    im.Begin("###{id}", nil, im.love.WindowFlags("NoTitleBar", "NoResize", "AlwaysAutoResize"))
 
 M.EndOverlay = ->
     im.End()
