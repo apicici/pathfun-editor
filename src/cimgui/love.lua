@@ -4,8 +4,11 @@ local path = (...):gsub("[^%.]*$", "")
 local M = require(path .. "master")
 local ffi = require("ffi")
 local bit = require("bit")
+local love = require("love")
 
 local C = M.C
+local L = M.love
+local _common = M._common
 
 local vertexformat = {
     {"VertexPosition", "float", 2},
@@ -13,112 +16,169 @@ local vertexformat = {
     {"VertexColor", "byte", 4}
 }
 
-local lovekeymap = {}
+local lovekeymap = {
+    ["return"] = C.ImGuiKey_Enter,
+    ["escape"] = C.ImGuiKey_Escape,
+    ["backspace"] = C.ImGuiKey_Backspace,
+    ["tab"] = C.ImGuiKey_Tab,
+    ["space"] = C.ImGuiKey_Space,
+    [","] = C.ImGuiKey_Comma,
+    ["-"] = C.ImGuiKey_Minus,
+    ["."] = C.ImGuiKey_Period,
+    ["/"] = C.ImGuiKey_Slash,
 
-local letters = "abcdefghijklmnopqrstuvwxyz"
-for i = 1, #letters do
-    local letter = letters:sub(i,i)
-    lovekeymap[letter] = C["ImGuiKey_" .. letter:upper()]
-end
-for i = 0, 9 do
-    lovekeymap[tostring(i)] =  C["ImGuiKey_" .. i]
-    lovekeymap["kp" .. i] =  C["ImGuiKey_Keypad" .. i]
-end
-for i = 1, 12 do
-    lovekeymap["f" .. i] =  C["ImGuiKey_F" .. i]
-end
-local inverse_map = {
-    ["LeftArrow"] = "left",
-    ["RightArrow"] = "right",
-    ["UpArrow"] = "up",
-    ["DownArrow"] = "down",
-    ["Tab"] = string.lower,
-    ["PageUp"] = string.lower,
-    ["PageDown"] = string.lower,
-    ["Home"] = string.lower,
-    ["End"] = string.lower,
-    ["Insert"] = string.lower,
-    ["Delete"] = string.lower,
-    ["Backspace"] = string.lower,
-    ["Space"] = string.lower,
-    ["Enter"] = "return",
-    ["Escape"] = string.lower,
-    ["LeftCtrl"] = "lctrl",
-    ["LeftShift"] = "lshift",
-    ["LeftAlt"] = "lgui",
-    ["LeftSuper"] = "lgui",
-    ["RightCtrl"] = "rctrl",
-    ["RightShift"] = "rshift",
-    ["RightAlt"] = "ralt",
-    ["RightSuper"] = "rgui",
-    ["Menu"] = string.lower,
-    ["Apostrophe"] = "'",
-    ["Comma"] = ",",
-    ["Minus"] = "-",
-    ["Period"] = ".",
-    ["Slash"] = "/",
-    ["Semicolon"] = ";",
-    ["Equal"] = "=",
-    ["LeftBracket"] = "[",
-    ["Backslash"] = "\\",
-    ["RightBracket"] = "]",
-    ["GraveAccent"] = "`",
-    ["CapsLock"] = string.lower,
-    ["ScrollLock"] = string.lower,
-    ["NumLock"] = string.lower,
-    ["PrintScreen"] = string.lower,
-    ["Pause"] = string.lower,
-    ["KeypadDecimal"] = "kp.",
-    ["KeypadDivide"] = "kp/",
-    ["KeypadMultiply"] = "kp*",
-    ["KeypadSubtract"] = "kp-",
-    ["KeypadAdd"] = "kp+",
-    ["KeypadEnter"] = "kpenter",
-    ["KeypadEqual"] = "kp=",
+    ["0"] = C.ImGuiKey_0,
+    ["1"] = C.ImGuiKey_1,
+    ["2"] = C.ImGuiKey_2,
+    ["3"] = C.ImGuiKey_3,
+    ["4"] = C.ImGuiKey_4,
+    ["5"] = C.ImGuiKey_5,
+    ["6"] = C.ImGuiKey_6,
+    ["7"] = C.ImGuiKey_7,
+    ["8"] = C.ImGuiKey_8,
+    ["9"] = C.ImGuiKey_9,
+
+    [";"] = C.ImGuiKey_Semicolon,
+    ["="] = C.ImGuiKey_Equal,
+
+    ["["] = C.ImGuiKey_LeftBracket,
+    ["\\"] = C.ImGuiKey_Backslash,
+    ["]"] = C.ImGuiKey_RightBracket,
+    ["`"] = C.ImGuiKey_GraveAccent,
+
+    ["a"] = C.ImGuiKey_A,
+    ["b"] = C.ImGuiKey_B,
+    ["c"] = C.ImGuiKey_C,
+    ["d"] = C.ImGuiKey_D,
+    ["e"] = C.ImGuiKey_E,
+    ["f"] = C.ImGuiKey_F,
+    ["g"] = C.ImGuiKey_G,
+    ["h"] = C.ImGuiKey_H,
+    ["i"] = C.ImGuiKey_I,
+    ["j"] = C.ImGuiKey_J,
+    ["k"] = C.ImGuiKey_K,
+    ["l"] = C.ImGuiKey_L,
+    ["m"] = C.ImGuiKey_M,
+    ["n"] = C.ImGuiKey_N,
+    ["o"] = C.ImGuiKey_O,
+    ["p"] = C.ImGuiKey_P,
+    ["q"] = C.ImGuiKey_Q,
+    ["r"] = C.ImGuiKey_R,
+    ["s"] = C.ImGuiKey_S,
+    ["t"] = C.ImGuiKey_T,
+    ["u"] = C.ImGuiKey_U,
+    ["v"] = C.ImGuiKey_V,
+    ["w"] = C.ImGuiKey_W,
+    ["x"] = C.ImGuiKey_X,
+    ["y"] = C.ImGuiKey_Y,
+    ["z"] = C.ImGuiKey_Z,
+
+    ["capslock"] = C.ImGuiKey_CapsLock,
+
+    ["f1"] = C.ImGuiKey_F1,
+    ["f2"] = C.ImGuiKey_F2,
+    ["f3"] = C.ImGuiKey_F3,
+    ["f4"] = C.ImGuiKey_F4,
+    ["f5"] = C.ImGuiKey_F5,
+    ["f6"] = C.ImGuiKey_F6,
+    ["f7"] = C.ImGuiKey_F7,
+    ["f8"] = C.ImGuiKey_F8,
+    ["f9"] = C.ImGuiKey_F9,
+    ["f10"] = C.ImGuiKey_F10,
+    ["f11"] = C.ImGuiKey_F11,
+    ["f12"] = C.ImGuiKey_F12,
+
+    ["printscreen"] = C.ImGuiKey_PrintScreen,
+    ["scrolllock"] = C.ImGuiKey_ScrollLock,
+    ["pause"] = C.ImGuiKey_Pause,
+    ["insert"] = C.ImGuiKey_Insert,
+    ["home"] = C.ImGuiKey_Home,
+    ["pageup"] = C.ImGuiKey_PageUp,
+    ["delete"] = C.ImGuiKey_Delete,
+    ["end"] = C.ImGuiKey_End,
+    ["pagedown"] = C.ImGuiKey_PageDown,
+    ["right"] = C.ImGuiKey_RightArrow,
+    ["left"] = C.ImGuiKey_LeftArrow,
+    ["down"] = C.ImGuiKey_DownArrow,
+    ["up"] = C.ImGuiKey_UpArrow,
+
+    ["numlock"] = C.ImGuiKey_NumLock,
+    ["kp/"] = C.ImGuiKey_KeypadDivide,
+    ["kp*"] = C.ImGuiKey_KeypadMultiply,
+    ["kp-"] = C.ImGuiKey_KeypadSubtract,
+    ["kp+"] = C.ImGuiKey_KeypadAdd,
+    ["kpenter"] = C.ImGuiKey_KeypadEnter,
+    ["kp0"] = C.ImGuiKey_Keypad0,
+    ["kp1"] = C.ImGuiKey_Keypad1,
+    ["kp2"] = C.ImGuiKey_Keypad2,
+    ["kp3"] = C.ImGuiKey_Keypad3,
+    ["kp4"] = C.ImGuiKey_Keypad4,
+    ["kp5"] = C.ImGuiKey_Keypad5,
+    ["kp6"] = C.ImGuiKey_Keypad6,
+    ["kp7"] = C.ImGuiKey_Keypad7,
+    ["kp8"] = C.ImGuiKey_Keypad8,
+    ["kp9"] = C.ImGuiKey_Keypad9,
+    ["kp."] = C.ImGuiKey_KeypadDecimal,
+    ["kp="] = C.ImGuiKey_KeypadEqual,
+
+    ["menu"] = C.ImGuiKey_Menu,
+
+    ["lctrl"] = {C.ImGuiKey_LeftCtrl, C.ImGuiKey_ModCtrl},
+    ["lshift"] = {C.ImGuiKey_LeftShift, C.ImGuiKey_ModShift},
+    ["lalt"] = {C.ImGuiKey_LeftAlt, C.ImGuiKey_ModAlt},
+    ["lgui"] = {C.ImGuiKey_LeftSuper, C.ImGuiKey_ModSuper},
+    ["rctrl"] = {C.ImGuiKey_RightCtrl, C.ImGuiKey_ModCtrl},
+    ["rshift"] = {C.ImGuiKey_RightShift, C.ImGuiKey_ModShift},
+    ["ralt"] = {C.ImGuiKey_RightAlt, C.ImGuiKey_ModAlt},
+    ["rgui"] = {C.ImGuiKey_RightSuper, C.ImGuiKey_ModSuper},
 }
-for k, v in pairs(inverse_map) do
-    v = type(v) == "function" and v(k) or v
-    lovekeymap[v] = C["ImGuiKey_" .. k]
-end
+_common.lovekeymap = lovekeymap
 
+local textureObject
+local strings = {}
 
-local ini_filename, textureObject
+_common.textures = setmetatable({},{__mode="v"})
 
-M._textures = setmetatable({},{__mode="v"})
+local cliboard_callback_get, cliboard_callback_set
+local io
 
-function M.Init()
+function L.Init()
     C.igCreateContext(nil)
-    M.BuildFontAtlas()
+    io = C.igGetIO()
+    L.BuildFontAtlas()
 
-    local io = C.igGetIO()
-
-    io.GetClipboardTextFn = function(userdata)
+    cliboard_callback_get = ffi.cast("const char* (*)(void*)", function(userdata)
         return love.system.getClipboardText()
-    end
-    io.SetClipboardTextFn = function(userdata, text)
+    end)
+    cliboard_callback_set = ffi.cast("void (*)(void*, const char*)", function(userdata, text)
         love.system.setClipboardText(ffi.string(text))
-    end
+    end)
+
+    io.GetClipboardTextFn = cliboard_callback_get
+    io.SetClipboardTextFn = cliboard_callback_set
 
     local dpiscale = love.window.getDPIScale()
-    io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.x = dpiscale, dpiscale
+    io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y = dpiscale, dpiscale
 
     love.filesystem.createDirectory("/")
-    ini_filename = love.filesystem.getSaveDirectory() .. "/imgui.ini"
-    io.IniFilename = ini_filename
+    strings.ini_filename = love.filesystem.getSaveDirectory() .. "/imgui.ini"
+    io.IniFilename = strings.ini_filename
+
+    strings.impl_name = "cimgui-love"
+    io.BackendPlatformName = strings.impl_name
+    io.BackendRendererName = strings.impl_name
 
     io.BackendFlags = bit.bor(C.ImGuiBackendFlags_HasMouseCursors, C.ImGuiBackendFlags_HasSetMousePos)
 end
 
-function M.BuildFontAtlas()
-    local io = C.igGetIO()
+function L.BuildFontAtlas()
     local pixels, width, height = ffi.new("unsigned char*[1]"), ffi.new("int[1]"), ffi.new("int[1]")
     C.ImFontAtlas_GetTexDataAsRGBA32(io.Fonts, pixels, width, height, nil)
     local imgdata = love.image.newImageData(width[0], height[0], "rgba8", ffi.string(pixels[0], width[0]*height[0]*4))
     textureObject = love.graphics.newImage(imgdata)
 end
 
-function M.Update(dt)
-    local io = C.igGetIO()
+function L.Update(dt)
     io.DisplaySize.x, io.DisplaySize.y = love.graphics.getDimensions()
     io.DeltaTime = dt
 
@@ -143,8 +203,13 @@ local cursors = {
     [C.ImGuiMouseCursor_NotAllowed] = love.mouse.getSystemCursor("no"),
 }
 
-function M.RenderDrawLists()
-    local io = C.igGetIO()
+function L.RenderDrawLists()
+    -- Avoid rendering when minimized
+    if io.DisplaySize.x == 0 or io.DisplaySize.y == 0 or not love.window.isVisible() then return end
+
+    local mode, alphamode = love.graphics.getBlendMode()
+
+    _common.RunShortcuts()
     local data = C.igGetDrawData()
 
     -- change mouse cursor
@@ -157,11 +222,6 @@ function M.RenderDrawLists()
             love.mouse.setCursor(cursor)
         end
     end
-
-    -- Avoid rendering when minimized, scale coordinates for retina displays
-    -- (screen coordinates != framebuffer coordinates)
-    if io.DisplaySize.x == 0 or io.DisplaySize.y == 0 then return end
-    C.ImDrawData_ScaleClipRects(data, io.DisplayFramebufferScale)
 
     for i = 0, data.CmdListsCount - 1 do
         local cmd_list = data.CmdLists[i]
@@ -178,98 +238,102 @@ function M.RenderDrawLists()
 
         for k = 0, cmd_list.CmdBuffer.Size - 1 do
             local cmd = cmd_list.CmdBuffer.Data[k]
-            local clipX, clipY = cmd.ClipRect.x, cmd.ClipRect.y
-            local clipW = cmd.ClipRect.z - clipX
-            local clipH = cmd.ClipRect.w - clipY
+            if cmd.ElemCount > 0 then
+                local clipX, clipY = cmd.ClipRect.x, cmd.ClipRect.y
+                local clipW = cmd.ClipRect.z - clipX
+                local clipH = cmd.ClipRect.w - clipY
 
-            love.graphics.setBlendMode("alpha")
+                love.graphics.setBlendMode("alpha")
 
-            local texture_id = C.ImDrawCmd_GetTexID(cmd)
-            if texture_id ~= nil then
-                local obj = M._textures[tostring(texture_id)]
-                local status, value = pcall(love_texture_test, obj)
-                assert(status and value, "Only LÖVE Texture objects can be passed as ImTextureID arguments.")
-                if obj:typeOf("Canvas") then
-					love.graphics.setBlendMode("alpha", "premultiplied")
+                local texture_id = C.ImDrawCmd_GetTexID(cmd)
+                if texture_id ~= nil then
+                    local obj = _common.textures[tostring(texture_id)]
+                    local status, value = pcall(love_texture_test, obj)
+                    assert(status and value, "Only LÖVE Texture objects can be passed as ImTextureID arguments.")
+                    if obj:typeOf("Canvas") then
+                        love.graphics.setBlendMode("alpha", "premultiplied")
+                    end
+                    mesh:setTexture(obj)
+                else
+                    mesh:setTexture(textureObject)
                 end
-                mesh:setTexture(obj)
-            else
-                mesh:setTexture(textureObject)
-            end
 
-            love.graphics.setScissor(clipX, clipY, clipW, clipH)
-            mesh:setDrawRange(cmd.IdxOffset + 1, cmd.ElemCount)
-            love.graphics.draw(mesh)
-            love.graphics.setBlendMode("alpha")
+                love.graphics.setScissor(clipX, clipY, clipW, clipH)
+                mesh:setDrawRange(cmd.IdxOffset + 1, cmd.ElemCount)
+                love.graphics.draw(mesh)
+                love.graphics.setBlendMode("alpha")
+            end
         end
     end
     love.graphics.setScissor()
+    love.graphics.setBlendMode(mode, alphamode)
 end
 
-function M.MouseMoved(x, y)
+function L.MouseMoved(x, y)
     if love.window.hasMouseFocus() then
-        C.igGetIO():AddMousePosEvent(x, y)
+        io:AddMousePosEvent(x, y)
     end
 end
 
 local mouse_buttons = {true, true, true}
 
-function M.MousePressed(button)
+function L.MousePressed(button)
     if mouse_buttons[button] then
-        C.igGetIO():AddMouseButtonEvent(button - 1, true)
+        io:AddMouseButtonEvent(button - 1, true)
     end
 end
 
-function M.MouseReleased(button)
+function L.MouseReleased(button)
     if mouse_buttons[button] then
-        C.igGetIO():AddMouseButtonEvent(button - 1, false)
+        io:AddMouseButtonEvent(button - 1, false)
     end
 end
 
-function M.WheelMoved(x, y)
-    C.igGetIO():AddMouseWheelEvent(x, y)
+function L.WheelMoved(x, y)
+    io:AddMouseWheelEvent(x, y)
 end
 
-
-local function update_mods()
-    local key_mods = bit.bor(
-        love.keyboard.isDown("rshift", "lshift") and C.ImGuiKeyModFlags_Shift or C.ImGuiKeyModFlags_None,
-        love.keyboard.isDown("rctrl", "lctrl") and C.ImGuiKeyModFlags_Ctrl or C.ImGuiKeyModFlags_None,
-        love.keyboard.isDown("ralt", "lalt") and C.ImGuiKeyModFlags_Alt or C.ImGuiKeyModFlags_None,
-        love.keyboard.isDown("rgui", "lgui") and C.ImGuiKeyModFlags_Super or C.ImGuiKeyModFlags_None
-    )
-    C.igGetIO():AddKeyModsEvent(key_mods)
+function L.KeyPressed(key)
+    local t = lovekeymap[key]
+    if type(t) == "table" then
+        io:AddKeyEvent(t[1], true)
+        io:AddKeyEvent(t[2], true)
+    else
+        io:AddKeyEvent(t or C.ImGuiKey_None, true)
+    end
 end
 
-function M.KeyPressed(key)
-    C.igGetIO():AddKeyEvent(lovekeymap[key] or C.ImGuiKey_None, true)
-    update_mods()
+function L.KeyReleased(key)
+    local t = lovekeymap[key]
+    if type(t) == "table" then
+        io:AddKeyEvent(t[1], false)
+        io:AddKeyEvent(t[2], false)
+    else
+        io:AddKeyEvent(t or C.ImGuiKey_None, false)
+    end
 end
 
-function M.KeyReleased(key)
-    C.igGetIO():AddKeyEvent(lovekeymap[key] or C.ImGuiKey_None, false)
-    update_mods()
+function L.TextInput(text)
+    C.ImGuiIO_AddInputCharactersUTF8(io, text)
 end
 
-function M.TextInput(text)
-    C.ImGuiIO_AddInputCharactersUTF8(C.igGetIO(), text)
-end
-
-function M.Shutdown()
+function L.Shutdown()
     C.igDestroyContext(nil)
+    io = nil
+    cliboard_callback_get:free()
+    cliboard_callback_set:free()
+    cliboard_callback_get, cliboard_callback_set = nil
 end
 
-function M.JoystickAdded(joystick)
+function L.JoystickAdded(joystick)
     if not joystick:isGamepad() then return end
-    local io = C.igGetIO()
     io.BackendFlags = bit.bor(io.BackendFlags, C.ImGuiBackendFlags_HasGamepad)
 end
 
-function M.JoystickRemoved()
+function L.JoystickRemoved()
     for _, joystick in ipairs(love.joystick.getJoysticks()) do
         if joystick:isGamepad() then return end
     end
-    local io = C.igGetIO()
     io.BackendFlags = bit.band(io.BackendFlags, bit.bnot(C.ImGuiBackendFlags_HasGamepad))
 end
 
@@ -297,17 +361,16 @@ local gamepad_map = {
     righty = {C.ImGuiKey_GamepadRStickUp, C.ImGuiKey_GamepadRStickDown},
 }
 
-function M.GamepadPressed(button)
-    C.igGetIO():AddKeyEvent(gamepad_map[button] or C.ImGuiKey_None, true)
+function L.GamepadPressed(button)
+    io:AddKeyEvent(gamepad_map[button] or C.ImGuiKey_None, true)
 end
 
-function M.GamepadReleased(button)
-    C.igGetIO():AddKeyEvent(gamepad_map[button] or C.ImGuiKey_None, false)
+function L.GamepadReleased(button)
+    io:AddKeyEvent(gamepad_map[button] or C.ImGuiKey_None, false)
 end
 
-function M.GamepadAxis(axis, value, threshold)
+function L.GamepadAxis(axis, value, threshold)
     threshold = threshold or 0
-    local io = C.igGetIO()
     local imguikey = gamepad_map[axis]
     if type(imguikey) == "table" then
         if value > threshold then
@@ -327,16 +390,16 @@ end
 
 -- input capture
 
-function M.GetWantCaptureMouse()
-    return C.igGetIO().WantCaptureMouse
+function L.GetWantCaptureMouse()
+    return io.WantCaptureMouse
 end
 
-function M.GetWantCaptureKeyboard()
-    return C.igGetIO().WantCaptureKeyboard
+function L.GetWantCaptureKeyboard()
+    return io.WantCaptureKeyboard
 end
 
-function M.GetWantTextInput()
-    return C.igGetIO().WantTextInput
+function L.GetWantTextInput()
+    return io.WantTextInput
 end
 
 -- flag helpers
@@ -352,7 +415,7 @@ end
 for name in pairs(flags) do
     local shortname = name:gsub("^ImGui", "")
     shortname = shortname:gsub("^Im", "")
-    M[shortname] = function(...)
+    L[shortname] = function(...)
         local t = {}
         for _, flag in ipairs({...}) do
             t[#t + 1] = M[name .. "_" .. flag]
@@ -360,3 +423,17 @@ for name in pairs(flags) do
         return bit.bor(unpack(t))
     end
 end
+
+-- revert to old implementation names, i.e., imgui.RenderDrawLists instead of imgui.love.RenderDrawLists, etc.
+local old_names = {}
+
+for k, v in pairs(L) do
+    old_names[k] = v
+end
+
+function L.RevertToOldNames()
+    for k, v in pairs(old_names) do
+        M[k] = v
+    end
+end
+
